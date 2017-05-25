@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -52,6 +54,9 @@ public final class DeviceControlActivity extends BaseActivity {
     private StringBuilder logHtml;
     private TextView logTextView;
     private EditText commandEditText;
+    private FloatingActionButton fab;
+    private ProgressBar progress;
+    private LinearLayout container;
 
     // Настройки приложения
     private boolean hexMode, checkSum, needClean;
@@ -148,6 +153,10 @@ public final class DeviceControlActivity extends BaseActivity {
             connector = null;
             deviceName = null;
         }
+
+        fab.setImageResource(R.drawable.ic_action_device_bluetooth);
+        container.setVisibility(View.GONE);
+        progress.setVisibility(View.GONE);
     }
     // ==========================================================================
 
@@ -283,13 +292,17 @@ public final class DeviceControlActivity extends BaseActivity {
                     BluetoothDevice device = btAdapter.getRemoteDevice(address);
                     if (super.isAdapterReady() && (connector == null)) setupConnector(device);
                 }
+
+                if (resultCode == Activity.RESULT_OK) {
+                    fab.setImageResource(R.drawable.ic_action_device_bluetooth_connected);
+                } else {
+                    fab.setImageResource(R.drawable.ic_action_device_bluetooth);
+                }
+
+                setLoaded();
                 break;
             case REQUEST_ENABLE_BT:
-                // When the request to enable Bluetooth returns
                 super.pendingRequestEnableBt = false;
-                if (resultCode != Activity.RESULT_OK) {
-                    Utils.log("BT not enabled");
-                }
                 break;
         }
     }
@@ -461,7 +474,10 @@ public final class DeviceControlActivity extends BaseActivity {
     // ==========================================================================
 
     private void initViews() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        progress = (ProgressBar) findViewById(R.id.progress);
+        container = (LinearLayout) findViewById(R.id.container);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -471,6 +487,7 @@ public final class DeviceControlActivity extends BaseActivity {
                 } else {
                     Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    setLoading();
                 }
             }
         });
@@ -515,5 +532,16 @@ public final class DeviceControlActivity extends BaseActivity {
             connector.write(command);
             appendLog(commandString, hexMode, true, needClean);
         }
+    }
+
+    private void setLoading() {
+        progress.setVisibility(View.VISIBLE);
+        container.setVisibility(View.GONE);
+
+    }
+
+    private void setLoaded() {
+        progress.setVisibility(View.GONE);
+        container.setVisibility(View.VISIBLE);
     }
 }
