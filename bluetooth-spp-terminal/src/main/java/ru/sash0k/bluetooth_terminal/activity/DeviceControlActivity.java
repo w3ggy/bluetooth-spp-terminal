@@ -1,6 +1,5 @@
 package ru.sash0k.bluetooth_terminal.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -9,13 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
@@ -72,9 +72,13 @@ public final class DeviceControlActivity extends BaseActivity {
         MSG_CONNECTED = getString(R.string.msg_connected);
 
         setContentView(R.layout.activity_terminal);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (isConnected() && (savedInstanceState != null)) {
             setDeviceName(savedInstanceState.getString(DEVICE_NAME));
-        } else getActionBar().setSubtitle(MSG_NOT_CONNECTED);
+        } else getSupportActionBar().setSubtitle(MSG_NOT_CONNECTED);
 
         this.logHtml = new StringBuilder();
         if (savedInstanceState != null) this.logHtml.append(savedInstanceState.getString(LOG));
@@ -111,7 +115,7 @@ public final class DeviceControlActivity extends BaseActivity {
             }
         });
 
-        initView();
+        initViews();
     }
     // ==========================================================================
 
@@ -170,7 +174,7 @@ public final class DeviceControlActivity extends BaseActivity {
         return false;
     }
     // ==========================================================================
-
+/*
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -180,10 +184,10 @@ public final class DeviceControlActivity extends BaseActivity {
                 R.drawable.ic_action_device_bluetooth_connected :
                 R.drawable.ic_action_device_bluetooth);
         return true;
-    }
+    }*/
     // ============================================================================
 
-
+/*
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -198,7 +202,7 @@ public final class DeviceControlActivity extends BaseActivity {
                 }
                 return true;
 
-/*            case R.id.menu_clear:
+*//*            case R.id.menu_clear:
                 if (logTextView != null) logTextView.setText("");
                 return true;
 
@@ -215,12 +219,12 @@ public final class DeviceControlActivity extends BaseActivity {
             case R.id.menu_settings:
                 final Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
-                return true;*/
+                return true;*//*
 
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
     // ============================================================================
 
 
@@ -390,7 +394,7 @@ public final class DeviceControlActivity extends BaseActivity {
 
     void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
-        getActionBar().setSubtitle(deviceName);
+        getSupportActionBar().setSubtitle(deviceName);
     }
     // ==========================================================================
 
@@ -417,7 +421,7 @@ public final class DeviceControlActivity extends BaseActivity {
                     case MESSAGE_STATE_CHANGE:
 
                         Utils.log("MESSAGE_STATE_CHANGE: " + msg.arg1);
-                        final ActionBar bar = activity.getActionBar();
+                        final ActionBar bar = activity.getSupportActionBar();
                         switch (msg.arg1) {
                             case DeviceConnector.STATE_CONNECTED:
                                 bar.setSubtitle(MSG_CONNECTED);
@@ -456,7 +460,21 @@ public final class DeviceControlActivity extends BaseActivity {
     }
     // ==========================================================================
 
-    private void initView() {
+    private void initViews() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (DeviceControlActivity.this.isAdapterReady()) {
+                    if (isConnected()) stopConnection();
+                    else startDeviceListActivity();
+                } else {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                }
+            }
+        });
+
         Button sendOneCommand = (Button) findViewById(R.id.send_one);
         sendOneCommand.setOnClickListener(new View.OnClickListener() {
             @Override
