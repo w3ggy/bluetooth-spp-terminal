@@ -546,5 +546,6 @@ public final class DeviceControlActivity extends BaseActivity {
     private void setLoaded() {
         progress.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
+        message.setVisibility(View.GONE);
     }
 }
