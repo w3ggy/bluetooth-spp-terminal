@@ -1,5 +1,12 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo"/>
-    <style name="DialogTheme" parent="@android:style/Theme.Holo.Dialog"/>
+    <style name="AppTheme" parent="@android:style/Theme.Material.Light">
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+    <style name="DialogTheme" parent="@android:style/Theme.Material.Light.Dialog"/>
 </resources>

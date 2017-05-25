@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -109,6 +110,8 @@ public final class DeviceControlActivity extends BaseActivity {
                 return false;
             }
         });
+
+        initView();
     }
     // ==========================================================================
 
@@ -195,7 +198,7 @@ public final class DeviceControlActivity extends BaseActivity {
                 }
                 return true;
 
-            case R.id.menu_clear:
+/*            case R.id.menu_clear:
                 if (logTextView != null) logTextView.setText("");
                 return true;
 
@@ -212,7 +215,7 @@ public final class DeviceControlActivity extends BaseActivity {
             case R.id.menu_settings:
                 final Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
-                return true;
+                return true;*/
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -452,4 +455,47 @@ public final class DeviceControlActivity extends BaseActivity {
         }
     }
     // ==========================================================================
+
+    private void initView() {
+        Button sendOneCommand = (Button) findViewById(R.id.send_one);
+        sendOneCommand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendString("0");
+            }
+        });
+
+        Button sendTwoCommand = (Button) findViewById(R.id.send_two);
+        sendTwoCommand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendString("1");
+            }
+        });
+
+        Button sendThreeCommand = (Button) findViewById(R.id.send_third);
+        sendThreeCommand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendString("2");
+            }
+        });
+
+        Button sendFourthCommand = (Button) findViewById(R.id.send_fourth);
+        sendFourthCommand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendString("3");
+            }
+        });
+    }
+
+    private void sendString(String commandString) {
+        byte[] command = (hexMode ? Utils.toHex(commandString) : commandString.getBytes());
+        if (command_ending != null) command = Utils.concat(command, command_ending.getBytes());
+        if (isConnected()) {
+            connector.write(command);
+            appendLog(commandString, hexMode, true, needClean);
+        }
+    }
 }
