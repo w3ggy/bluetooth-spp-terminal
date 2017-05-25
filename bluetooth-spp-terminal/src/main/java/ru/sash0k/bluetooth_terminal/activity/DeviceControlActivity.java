@@ -57,6 +57,7 @@ public final class DeviceControlActivity extends BaseActivity {
     private FloatingActionButton fab;
     private ProgressBar progress;
     private LinearLayout container;
+    private TextView message;
 
     // Настройки приложения
     private boolean hexMode, checkSum, needClean;
@@ -157,6 +158,7 @@ public final class DeviceControlActivity extends BaseActivity {
         fab.setImageResource(R.drawable.ic_action_device_bluetooth);
         container.setVisibility(View.GONE);
         progress.setVisibility(View.GONE);
+        message.setVisibility(View.VISIBLE);
     }
     // ==========================================================================
 
@@ -474,6 +476,7 @@ public final class DeviceControlActivity extends BaseActivity {
     // ==========================================================================
 
     private void initViews() {
+        message = (TextView) findViewById(R.id.message);
         progress = (ProgressBar) findViewById(R.id.progress);
         container = (LinearLayout) findViewById(R.id.container);
 
@@ -537,7 +540,7 @@ public final class DeviceControlActivity extends BaseActivity {
     private void setLoading() {
         progress.setVisibility(View.VISIBLE);
         container.setVisibility(View.GONE);
-
+        message.setVisibility(View.GONE);
     }
 
     private void setLoaded() {
