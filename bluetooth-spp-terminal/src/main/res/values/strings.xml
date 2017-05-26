@@ -10,7 +10,7 @@
     <string name="pref_need_clean">pref_need_clean</string>
     <!-- prefence keys, no translation needed -->
 
-    <string name="app_name">SmartDacha</string>
+    <string name="app_name">Умные грядки</string>
 
     <string name="msg_not_connected">not connected</string>
     <string name="msg_connecting">connecting…</string>
