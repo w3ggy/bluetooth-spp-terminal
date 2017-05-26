@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,7 +27,11 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ru.sash0k.bluetooth_terminal.DeviceData;
 import ru.sash0k.bluetooth_terminal.R;
@@ -58,6 +63,7 @@ public final class DeviceControlActivity extends BaseActivity {
     private ProgressBar progress;
     private LinearLayout container;
     private TextView message;
+    private TextView moisture;
 
     // Настройки приложения
     private boolean hexMode, checkSum, needClean;
@@ -456,6 +462,24 @@ public final class DeviceControlActivity extends BaseActivity {
                         if (readMessage != null) {
                             activity.appendLog(readMessage, false, false, activity.needClean);
                         }
+
+                        if (readMessage != null) {
+                            String[] results = readMessage.split(" ");
+                            int length = results.length;
+
+                            for (int i = 0; i < length; i++) {
+                                results[i] = results[i].replaceAll("\\r", "");
+                                results[i] = results[i].replaceAll("\\n", "");
+                            }
+
+//                            List<String> res = removeEmpty(results);
+                            int moisture = getResult(readMessage);
+//                            int moisture = getMoisture(res);
+
+                            if (moisture != 0 && mActivity.get() != null) {
+                                mActivity.get().setMoisture(moisture);
+                            }
+                        }
                         break;
 
                     case MESSAGE_DEVICE_NAME:
@@ -476,6 +500,7 @@ public final class DeviceControlActivity extends BaseActivity {
     // ==========================================================================
 
     private void initViews() {
+        moisture = (TextView) findViewById(R.id.moisture);
         message = (TextView) findViewById(R.id.message);
         progress = (ProgressBar) findViewById(R.id.progress);
         container = (LinearLayout) findViewById(R.id.container);
@@ -547,5 +572,62 @@ public final class DeviceControlActivity extends BaseActivity {
         progress.setVisibility(View.GONE);
         container.setVisibility(View.VISIBLE);
         message.setVisibility(View.GONE);
+    }
+
+    private void setMoisture(int result) {
+        float temp = (1024 - result) / 1024.0f * 100;
+
+        moisture.setText(getString(R.string.moisture, (int) temp));
+    }
+
+    private static List<String> removeEmpty(String[] results) {
+        List<String> res = new ArrayList<>();
+
+        for (String string : results) {
+            if (!TextUtils.isEmpty(string)) {
+                res.add(string);
+            }
+        }
+
+        return res;
+    }
+
+    private static int getMoisture(List<String> res) {
+        int moisture = 0;
+        int count = 0;
+
+        for (String string : res) {
+            try {
+                moisture += Integer.parseInt(string);
+                count++;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (count > 0) {
+            return moisture / count;
+        }
+
+        return moisture;
+    }
+
+    private static int getResult(String values) {
+        Pattern regex = Pattern.compile("\\[([0-9]{4})\\]");
+
+        Matcher matcher = regex.matcher(values);
+
+        while (matcher.find()) {
+            String result = matcher.group();
+            result = result
+                    .replaceAll("\\r", "")
+                    .replaceAll("\\n", "")
+                    .replaceAll("\\n", "")
+                    .replaceAll("\\[", "")
+                    .replaceAll("\\]", "");
+            return Integer.parseInt(result);
+        }
+
+        return 0;
     }
 }

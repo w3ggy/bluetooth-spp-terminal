@@ -49,4 +49,6 @@
 
     <string name="need_clean">Clear previous command</string>
     <string name="need_clean_summary">Cleanup command view after sending</string>
+
+    <string name="moisture">Текущая влажность %1$d %%</string>
 </resources>
