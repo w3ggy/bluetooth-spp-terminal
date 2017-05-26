@@ -370,6 +370,9 @@ public final class DeviceControlActivity extends BaseActivity {
      * @param outgoing - направление передачи
      */
     void appendLog(String message, boolean hexMode, boolean outgoing, boolean clean) {
+        if (true) {
+            return; //TODO delete this!
+        }
 
         StringBuilder msg = new StringBuilder();
         if (show_timings) msg.append("[").append(timeformat.format(new Date())).append("]");
