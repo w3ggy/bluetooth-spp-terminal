@@ -613,7 +613,7 @@ public final class DeviceControlActivity extends BaseActivity {
     }
 
     private static int getResult(String values) {
-        Pattern regex = Pattern.compile("\\[([0-9]{4})\\]");
+        Pattern regex = Pattern.compile("\\[(.*?)\\]");
 
         Matcher matcher = regex.matcher(values);
 
