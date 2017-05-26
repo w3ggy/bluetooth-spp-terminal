@@ -35,6 +35,7 @@ import ru.sash0k.bluetooth_terminal.R;
 import ru.sash0k.bluetooth_terminal.Utils;
 import ru.sash0k.bluetooth_terminal.bluetooth.DeviceConnector;
 import ru.sash0k.bluetooth_terminal.bluetooth.DeviceListActivity;
+import ru.sash0k.bluetooth_terminal.utils.NotificationUtil;
 
 public final class DeviceControlActivity extends BaseActivity {
     private static final String DEVICE_NAME = "DEVICE_NAME";
@@ -49,6 +50,7 @@ public final class DeviceControlActivity extends BaseActivity {
     private static String MSG_NOT_CONNECTED;
     private static String MSG_CONNECTING;
     private static String MSG_CONNECTED;
+    private static boolean hasNotification;
 
     private static DeviceConnector connector;
     private static BluetoothResponseHandler mHandler;
@@ -474,6 +476,10 @@ public final class DeviceControlActivity extends BaseActivity {
 //                            int moisture = getMoisture(res);
 
                             if (moisture != 0 && mActivity.get() != null) {
+                                if (!hasNotification && moisture < 10) {
+                                    NotificationUtil.createNotification(mActivity.get());
+                                    hasNotification = true;
+                                }
                                 mActivity.get().setMoisture(moisture);
                             }
                         }
