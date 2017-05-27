@@ -1,23 +1,8 @@
-##Bluetooth-spp-terminal
-(based on Android Bluetooth chat sample)
+###Умные грядки
+Приложение для управления системой полива
 
-### Features
-#### v-1.1 (03.11.2016)
- * Calc and check Modulo256 checksum;
- * Drop deprecated Android 2.x support;
- * Minor fixes/improvements;
-
-#### v-1.0 (17.04.2014)
- * Search and connect to bluetooth devices in slave mode via RFCOMM;
- * Send commands to devices both ASCII and hex modes;
- * Share and clean log;
- * English/Russian i18n;
- 
-
-### Download
-* on [F-Droid](https://f-droid.org/repository/browse/?fdid=ru.sash0k.bluetooth_terminal).
-* on the [Play Store](https://play.google.com/store/apps/details?id=ru.sash0k.bluetooth_terminal).
-* directly on [GitHub](https://github.com/Sash0k/bluetooth-spp-terminal/releases).
+(based on Bluetooth-spp-terminal by Sash0k)
+https://github.com/Sash0k/bluetooth-spp-terminal
 
 ###License
 
