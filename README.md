@@ -1,7 +1,10 @@
+
 ###Умные грядки
+
 Приложение для управления системой полива
 
 (based on Bluetooth-spp-terminal by Sash0k)
+
 https://github.com/Sash0k/bluetooth-spp-terminal
 
 ###License
